@@ -42,8 +42,8 @@ def deploy(
             deploy_response = app_client.deploy(
                 on_schema_break=OnSchemaBreak.ReplaceApp if is_local else OnSchemaBreak.Fail,
                 on_update=OnUpdate.UpdateApp if is_local else OnUpdate.Fail,
-                allow_delete=is_local,
-                allow_update=is_local,
+                # allow_delete=is_local,
+                # allow_update=is_local,
             )
 
             # if only just created, fund smart contract account
@@ -58,11 +58,5 @@ def deploy(
                 )
                 logger.info(f"New app created, funding with {transfer_parameters.micro_algos}µ algos")
                 transfer(algod_client, transfer_parameters)
-
-            name = "world"
-            response = app_client.call("hello", name=name)
-            logger.info(
-                f"Called hello on {app_spec.contract.name} ({app_client.app_id}) with name={name}, received: {response.return_value}"
-            )
         case _:
             raise Exception(f"Attempt to deploy unknown contract {app_spec.contract.name}")
